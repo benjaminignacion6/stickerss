@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { stickers } from './data/stickers'
 import StickersCard from './components/StickersCard'
+import AlbumSummary from './components/AlbumSummary'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -10,12 +11,18 @@ function App() {
   const [count, setCount] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('todas')
-  const [stickerStates, setStickerStates] = useState(() =>
-    stickers.reduce((acc, sticker) => {
+  const [stickerStates, setStickerStates] = useState(() => {
+    const savedStates = localStorage.getItem('sticker-states')
+
+    if (savedStates) {
+      return JSON.parse(savedStates)
+    }
+
+    return stickers.reduce((acc, sticker) => {
       acc[sticker.id] = 'falta'
       return acc
     }, {})
-  )
+  })
 
   const visibleStickers = stickers
     .filter((sticker) => {
@@ -52,8 +59,8 @@ function App() {
   }
 
   useEffect(() => {
-    console.log(stickers)
-  }, [])
+    localStorage.setItem('sticker-states', JSON.stringify(stickerStates))
+  }, [stickerStates])
 
   return (
     <>
@@ -170,6 +177,13 @@ function App() {
             Total visible: <strong>{visibleStickers.length}</strong> figuritas
           </p>
         </div>
+
+        <AlbumSummary
+          total={stickers.length}
+          tengo={Object.values(stickerStates).filter((status) => status === 'tengo').length}
+          repetidas={Object.values(stickerStates).filter((status) => status === 'repetida').length}
+          faltan={Object.values(stickerStates).filter((status) => status === 'falta').length}
+        />
 
         <div className="sticker-controls">
           <input

@@ -207,6 +207,42 @@
   border-color: var(--accent);
 }
 
+.album-summary {
+  margin: 16px 0 20px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--accent-bg);
+}
+
+.album-summary h3 {
+  margin: 0 0 12px;
+}
+
+.album-summary__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.album-summary__item {
+  padding: 10px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.album-summary__label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.album-summary__completion {
+  margin: 12px 0 0;
+}
+
 .sticker-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
