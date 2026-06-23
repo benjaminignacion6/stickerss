@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { stickers } from './data/stickers'
+import StickersCard from './components/StickersCard'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -7,6 +8,10 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const featuredStickers = stickers.slice(0, 5).map((sticker, index) => ({
+    ...sticker,
+    status: ['tengo', 'repetida', 'falta', 'tengo', 'repetida'][index],
+  }))
 
   useEffect(() => {
     console.log(stickers)
@@ -123,27 +128,18 @@ function App() {
       <section className="sticker-section">
         <div className="sticker-section-header">
           <h2>Figuritas</h2>
-          <p>{stickers.length} figuritas disponibles</p>
+          <p>{featuredStickers.length} figuritas destacadas</p>
         </div>
 
         <div className="sticker-grid">
-          {stickers.map((sticker) => (
-            <article key={sticker.id} className="sticker-card">
-              <span className="sticker-code">{sticker.code}</span>
-              <h3>{sticker.name}</h3>
-              <p>
-                <strong>Sección:</strong> {sticker.section}
-              </p>
-              <p>
-                <strong>Grupo:</strong> {sticker.group ?? '—'}
-              </p>
-              <p>
-                <strong>Tipo:</strong> {sticker.type}
-              </p>
-              <p>
-                <strong>Rareza:</strong> {sticker.rarity}
-              </p>
-            </article>
+          {featuredStickers.map((sticker) => (
+            <StickersCard
+              key={sticker.id}
+              numbers={sticker.code}
+              name={sticker.name}
+              group={sticker.group ?? sticker.section}
+              status={sticker.status}
+            />
           ))}
         </div>
       </section>

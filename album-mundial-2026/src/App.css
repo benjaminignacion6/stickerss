@@ -183,9 +183,30 @@
   border-radius: 12px;
   padding: 16px;
   box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sticker-code {
+.sticker-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.sticker-card--tengo {
+  background: #dff7e8;
+  border-color: #5ecf80;
+}
+
+.sticker-card--repetida {
+  background: #fff6d6;
+  border-color: #f3c13a;
+}
+
+.sticker-card--falta {
+  background: #e9ecef;
+  border-color: #8f99a4;
+}
+
+.sticker-card__number {
   display: inline-block;
   margin-bottom: 8px;
   padding: 4px 8px;
@@ -197,13 +218,37 @@
 }
 
 .sticker-card h3 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 1rem;
 }
 
 .sticker-card p {
-  margin: 4px 0;
+  margin: 4px 0 10px;
   font-size: 0.95rem;
+}
+
+.sticker-card__status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #111;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.sticker-card__status--tengo {
+  background: #5ecf80;
+  color: white;
+}
+
+.sticker-card__status--repetida {
+  background: #f3c13a;
+  color: #222;
+}
+
+.sticker-card__status--falta {
+  background: #8f99a4;
+  color: white;
 }
 
 #spacer {
