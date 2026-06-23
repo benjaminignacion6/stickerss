@@ -8,10 +8,31 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const featuredStickers = stickers.slice(0, 5).map((sticker, index) => ({
+  const [stickerStates, setStickerStates] = useState(() =>
+    stickers.reduce((acc, sticker) => {
+      acc[sticker.id] = 'falta'
+      return acc
+    }, {})
+  )
+
+  const featuredStickers = stickers.slice(0, 5).map((sticker) => ({
     ...sticker,
-    status: ['tengo', 'repetida', 'falta', 'tengo', 'repetida'][index],
+    status: stickerStates[sticker.id],
   }))
+
+  const handleStatusChange = (id) => {
+    setStickerStates((prev) => {
+      const currentStatus = prev[id] || 'falta'
+      const statusOrder = ['falta', 'tengo', 'repetida']
+      const currentIndex = statusOrder.indexOf(currentStatus)
+      const nextStatus = statusOrder[(currentIndex + 1) % statusOrder.length]
+
+      return {
+        ...prev,
+        [id]: nextStatus,
+      }
+    })
+  }
 
   useEffect(() => {
     console.log(stickers)
@@ -135,10 +156,12 @@ function App() {
           {featuredStickers.map((sticker) => (
             <StickersCard
               key={sticker.id}
+              id={sticker.id}
               numbers={sticker.code}
               name={sticker.name}
               group={sticker.group ?? sticker.section}
               status={sticker.status}
+              onStatusChange={handleStatusChange}
             />
           ))}
         </div>
