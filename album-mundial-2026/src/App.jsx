@@ -8,6 +8,8 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('todas')
   const [stickerStates, setStickerStates] = useState(() =>
     stickers.reduce((acc, sticker) => {
       acc[sticker.id] = 'falta'
@@ -15,10 +17,25 @@ function App() {
     }, {})
   )
 
-  const featuredStickers = stickers.slice(0, 5).map((sticker) => ({
-    ...sticker,
-    status: stickerStates[sticker.id],
-  }))
+  const visibleStickers = stickers
+    .filter((sticker) => {
+      const matchesSearch =
+        sticker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        sticker.code.toLowerCase().includes(searchTerm.toLowerCase())
+
+      const status = stickerStates[sticker.id] || 'falta'
+      const matchesStatus =
+        statusFilter === 'todas' ||
+        (statusFilter === 'tengo' && status === 'tengo') ||
+        (statusFilter === 'repetidas' && status === 'repetida') ||
+        (statusFilter === 'faltan' && status === 'falta')
+
+      return matchesSearch && matchesStatus
+    })
+    .map((sticker) => ({
+      ...sticker,
+      status: stickerStates[sticker.id] || 'falta',
+    }))
 
   const handleStatusChange = (id) => {
     setStickerStates((prev) => {
@@ -149,11 +166,42 @@ function App() {
       <section className="sticker-section">
         <div className="sticker-section-header">
           <h2>Figuritas</h2>
-          <p>{featuredStickers.length} figuritas destacadas</p>
+          <p>
+            Total visible: <strong>{visibleStickers.length}</strong> figuritas
+          </p>
+        </div>
+
+        <div className="sticker-controls">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Buscar por nombre o número"
+            className="sticker-search"
+          />
+
+          <div className="sticker-filters">
+            {['todas', 'tengo', 'repetidas', 'faltan'].map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                className={`sticker-filter ${statusFilter === filter ? 'active' : ''}`}
+                onClick={() => setStatusFilter(filter)}
+              >
+                {filter === 'todas'
+                  ? 'Todas'
+                  : filter === 'tengo'
+                    ? 'Tengo'
+                    : filter === 'repetidas'
+                      ? 'Repetidas'
+                      : 'Faltan'}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="sticker-grid">
-          {featuredStickers.map((sticker) => (
+          {visibleStickers.map((sticker) => (
             <StickersCard
               key={sticker.id}
               id={sticker.id}
